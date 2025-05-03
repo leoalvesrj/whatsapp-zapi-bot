@@ -7,21 +7,23 @@ app = Flask(__name__)
 
 @app.route("/webhook/zapi", methods=["POST"])
 def webhook():
-    data = request.get_json()
-    print("📥 Requisição recebida:")
-    print(data)
-
     try:
-        # Verifica se a mensagem está no formato esperado
-        if not data or 'text' not in data or 'message' not in data['text'] or 'phone' not in data:
-            return jsonify({"error": "Formato de mensagem inválido"}), 400
+        data = request.get_json()
+        print("📥 Requisição recebida:")
+        print(data)
 
-        msg = data['text']['message'].strip()
-        chat_id = data['phone']
+        # Validação segura para evitar erros de chave
+        if not data or "text" not in data or "message" not in data["text"]:
+            return jsonify({"error": "Formato de payload inválido."}), 400
+
+        msg = data["text"]["message"].strip()
+        chat_id = data.get("chatLid") or data.get("phone")
+
+        if not chat_id:
+            return jsonify({"error": "chatId não encontrado."}), 400
 
         if msg.startswith("!"):
             comando = msg.lower().replace("!", "").strip()
-
             if comando == "estoque":
                 resposta = get_estoque()
             elif comando == "compras":
@@ -38,9 +40,7 @@ def webhook():
         return jsonify({"status": "ok"})
 
     except Exception as e:
-        import traceback
-        print("🟥 ERRO DETECTADO 🟥")
-        traceback.print_exc()
+        print("Erro:", str(e))
         return jsonify({"error": str(e)}), 500
 
 @app.route("/", methods=["GET"])
