@@ -33,4 +33,5 @@ def index():
     return jsonify({"status": "bot ativo"})
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=10000)
+
