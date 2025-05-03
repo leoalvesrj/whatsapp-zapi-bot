@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from sheets import get_estoque, get_compras
 from zapi import enviar_mensagem
 from tagplus import consultar_financeiro
-from gpt import resposta_gpt  # ← Importa o GPT
 
 app = Flask(__name__)
 
@@ -26,8 +25,8 @@ def webhook():
 
             enviar_mensagem(chat_id, resposta)
         else:
-            resposta = resposta_gpt(msg)
-            enviar_mensagem(chat_id, resposta)
+            # Ignora qualquer mensagem que não começa com "!"
+            print("Mensagem ignorada:", msg)
 
         return jsonify({"status": "ok"})
 
