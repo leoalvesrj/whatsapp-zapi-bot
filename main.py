@@ -31,7 +31,9 @@ def webhook():
         return jsonify({"status": "ok"})
 
     except Exception as e:
-        print("Erro:", str(e))
+        import traceback
+        print("🟥 ERRO DETECTADO 🟥")
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 @app.route("/", methods=["GET"])
