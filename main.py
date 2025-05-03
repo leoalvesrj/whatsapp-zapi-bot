@@ -9,6 +9,9 @@ app = Flask(__name__)
 def webhook():
     data = request.get_json()
 
+    print("📥 Requisição recebida:")
+    print(data)
+
     try:
         if not data or 'message' not in data or 'text' not in data['message'] or 'chatId' not in data['message']:
             return jsonify({"error": "Formato de mensagem inválido"}), 400
@@ -35,7 +38,9 @@ def webhook():
         return jsonify({"status": "ok"})
 
     except Exception as e:
-        print("Erro:", str(e))
+        import traceback
+        print("🟥 ERRO DETECTADO 🟥")
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 @app.route("/", methods=["GET"])
