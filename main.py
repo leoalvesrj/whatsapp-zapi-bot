@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from sheets import get_estoque, get_compras
 from zapi import enviar_mensagem
 from tagplus import consultar_financeiro
+from gpt import resposta_gpt  # ← Importa o GPT
 
 app = Flask(__name__)
 
@@ -24,6 +25,10 @@ def webhook():
                 resposta = "Comando não reconhecido. Use !estoque, !compras ou !financeiro."
 
             enviar_mensagem(chat_id, resposta)
+        else:
+            resposta = resposta_gpt(msg)
+            enviar_mensagem(chat_id, resposta)
+
         return jsonify({"status": "ok"})
 
     except Exception as e:
