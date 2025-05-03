@@ -25,7 +25,9 @@ def webhook():
 
             enviar_mensagem(chat_id, resposta)
         return jsonify({"status": "ok"})
+
     except Exception as e:
+        print("Erro:", str(e))
         return jsonify({"error": str(e)}), 500
 
 @app.route("/", methods=["GET"])
